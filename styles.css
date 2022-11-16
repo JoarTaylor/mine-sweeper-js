@@ -1,0 +1,44 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+    --squares-root: ;
+    --color: ;
+}
+
+.playing-field {
+    padding: 2vh;
+    height: 60vh;
+    width: 30vw;
+    margin: 2vh;
+    display: grid;
+    grid-template-columns: repeat(var(--squares-root), 1fr);
+    grid-template-rows: repeat(var(--squares-root), 1fr);
+    grid-gap: 0.5rem;
+    background-color: #7E7E7F;
+    border: 0.8em solid #C1C0C2;
+}
+
+.playing-field div{
+    background-color: #C1C0C2;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    border-top: 0.2rem solid white;
+    border-left: 0.2remsolid white;
+}
+
+#square-cleared {
+    border: 2px solid #98969a;
+}
+
+.potential-mine {
+    background-color: rgb(123, 3, 209) !important;
+}
+
