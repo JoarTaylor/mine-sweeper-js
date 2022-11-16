@@ -1,5 +1,7 @@
 const playingField = document.querySelector('.playing-field');
-const boardOptions = document.querySelectorAll('header button');
+const boardOptions = document.querySelectorAll('nav button');
+const scoreElement = document.querySelector('.score');
+const navElement = document.querySelector('nav');
 
 createBoard();
 
@@ -43,9 +45,8 @@ boardOptions.forEach((option) => {
         } while (randomNumArray.length < minesNum)
 
         //check for mines
-        let squaresCleared = 0;
-        const maybeMine = document.querySelectorAll('.single-square')
-        const maybeMineArray = Array.from(maybeMine);
+        const maybeMineNodes = document.querySelectorAll('.single-square')
+        const maybeMineArray = Array.from(maybeMineNodes);
         const totalSquares = maybeMineArray.length;
         maybeMineArray.forEach((check) => {
             check.addEventListener(('click'), clearMines);
@@ -57,7 +58,7 @@ boardOptions.forEach((option) => {
                 //cleared square
                 } else if (check.id != "mine") {
                     check.id = "square-cleared";    
-                    squaresCleared++;
+
                     this.removeEventListener('click', clearMines);
 
                     //check surrounding squares
@@ -157,6 +158,12 @@ boardOptions.forEach((option) => {
                             console.log('1 mine');
                             numMinesAround++;
                         }
+                        //if no mines around square
+                        if(numMinesAround == 0) {
+                            mineOnTop.id = "square-cleared";
+                            mineToTheLeft.id = "square-cleared";
+                            mineUpperLeft.id = "square-cleared";
+                        }
                     } 
                     
                     //check upper un-cornered squares
@@ -226,7 +233,7 @@ boardOptions.forEach((option) => {
                     } 
                     
                     //check right un-cornered squares
-                    else if(checkSquare > baseNum && (checkSquare + 1) != totalSquares && ((checkSquare + 1)%baseNum==0)) {
+                    else if(checkSquare > baseNum && (checkSquare + 1) != totalSquares && ((checkSquare + 1)%baseNum == 0)) {
                         console.log('hit upper');
                         if(mineOnTop.id == "mine") {
                             console.log('1 mine');
@@ -257,7 +264,7 @@ boardOptions.forEach((option) => {
                         }
                     } 
                     //check left un-cornered squares
-                    else if(checkSquare > 0 && (checkSquare + 1) != (totalSquares - baseNum) && ((checkSquare + 1)%baseNum==1)) {
+                    else if(checkSquare > 0 && (checkSquare + 1) != (totalSquares - baseNum) && ((checkSquare + 1)%baseNum == 1)) {
                         console.log('hit left');
                         if(mineOnTop.id == "mine") {
                             console.log('1 mine');
@@ -348,18 +355,31 @@ boardOptions.forEach((option) => {
                     } else if (check.textContent == "0") {
                         check.style.color = "white";
                     }
-                    //winning condition, all squares cleared
-                    if(squaresCleared == (squareNumber-minesNum)) {
-                        setTimeout(() => {
-                            alert('you win');
-                          }, "500")
+
+                    //check current score
+                    let score = 0;
+                    for(let i=0; i<maybeMineArray.length; i++) {
+                        if(maybeMineArray[i].id== "square-cleared") {
+                            score++;
+                            scoreElement.textContent = score;
+                            if(score == (squareNumber-minesNum)) {
+                                setTimeout(() => {
+                                    let winElement = document.createElement('h3');
+                                    winElement.textContent = 'Game Won!';
+                                    navElement.appendChild(winElement);
+                                  }, "500")
+                            }
+                        }
                     }
+                  
+                
                 }
             }
             check.addEventListener("contextmenu", e => e.preventDefault());
             check.addEventListener('mousedown', (e) => {
                 if(e.button == 2) {
-                    check.classList.add('potential-mine');
+                    check.classList.toggle('potential-mine');
+                    check.innerHTML = `<i class="fa-solid fa-flag-swallowtail"></i>`
                 }
             })
         })
